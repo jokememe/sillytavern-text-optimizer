@@ -1,0 +1,39 @@
+{
+  "api": {
+    "baseUrl": "https://druakolnjtfk.ap-northeast-1.clawcloudrun.com/v1",
+    "apiKey": "sk-00R19mjdGGWcEJkOO1TDsY8Bi6hiOW9HRM0rBKqfu3AjcZWK",
+    "model": "gemini-2.5-pro-preview-06-05",
+    "timeout": 50000
+  },
+  "textOptimization": {
+    "wrapTags": [
+      "<content>",
+      "</content>"
+    ],
+    "optimizationPrompt": "只输出生成之后的文本。\n去除所有符号",
+    "temperature": 0.5,
+    "maxTokens": 100000,
+    "useSeparateOptimizationApi": true,
+    "optimizationApi": {
+      "baseUrl": "https://druakolnjtfk.ap-northeast-1.clawcloudrun.com/v1",
+      "apiKey": "sk-00R19mjdGGWcEJkOO1TDsY8Bi6hiOW9HRM0rBKqfu3AjcZWK",
+      "model": "zai-org/GLM-4.5",
+      "timeout": 30000
+    }
+  },
+  "server": {
+    "port": 3000,
+    "enableCors": true
+  },
+  "logging": {
+    "level": "info",
+    "enableConsole": true,
+    "enableFile": false,
+    "filePath": "./logs/app.log"
+  },
+  "modelAliases": {
+    "custom-gpt-4": "gpt-4",
+    "custom-gpt-3.5": "gpt-3.5-turbo",
+    "gemini优化": "gemini-2.5-pro-preview-06-05"
+  }
+}

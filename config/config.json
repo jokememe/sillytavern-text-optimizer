@@ -1,0 +1,39 @@
+{
+  "api": {
+    "baseUrl": "https://api.openai.com/v1",
+    "apiKey": "your-api-key-here",
+    "model": "gpt-3.5-turbo",
+    "timeout": 50000
+  },
+  "textOptimization": {
+    "wrapTags": [
+      "*",
+      "*"
+    ],
+    "optimizationPrompt": "请优化以下文本，使其更加流畅易读，但不改变原意：",
+    "temperature": 0.7,
+    "maxTokens": 1000,
+    "useSeparateOptimizationApi": false,
+    "optimizationApi": {
+      "baseUrl": "https://api.openai.com/v1",
+      "apiKey": "your-optimization-api-key-here",
+      "model": "gpt-3.5-turbo",
+      "timeout": 30000
+    }
+  },
+  "server": {
+    "port": 3000,
+    "enableCors": true
+  },
+  "logging": {
+    "level": "info",
+    "enableConsole": true,
+    "enableFile": false,
+    "filePath": "./logs/app.log"
+  },
+  "modelAliases": {
+    "chat-model": "gpt-3.5-turbo",
+    "advanced-model": "gpt-4",
+    "fast-model": "gpt-3.5-turbo-16k"
+  }
+}

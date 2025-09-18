@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SillyTavern Text Optimizer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SillyTavern Text Optimizer</h1>
+            <p>轻量级文本优化代理服务</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-button active" data-tab="config">配置管理</button>
+            <button class="tab-button" data-tab="model-aliases">模型别名</button>
+            <button class="tab-button" data-tab="optimizer">文本优化</button>
+            <button class="tab-button" data-tab="logs">日志查看</button>
+        </nav>
+
+        <main>
+            <!-- 配置管理标签页 -->
+            <div id="config" class="tab-content active">
+                <div class="card">
+                    <h2>API 配置</h2>
+                    <div class="form-group">
+                        <label for="baseUrl">API 地址:</label>
+                        <input type="text" id="baseUrl" placeholder="https://api.openai.com/v1">
+                    </div>
+                    <div class="form-group">
+                        <label for="apiKey">API 密钥:</label>
+                        <input type="password" id="apiKey" placeholder="输入您的API密钥">
+                    </div>
+                    <div class="form-group">
+                        <label for="model">模型:</label>
+                        <select id="model">
+                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                            <option value="gpt-4">GPT-4</option>
+                        </select>
+                        <button id="refreshModels" class="btn-secondary">刷新模型列表</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="timeout">超时时间 (ms):</label>
+                        <input type="number" id="timeout" value="30000">
+                    </div>
+                    <div class="form-actions">
+                        <button id="testConnection" class="btn-secondary">测试连接</button>
+                        <button id="saveConfig" class="btn-primary">保存配置</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>文本优化配置</h2>
+                    <div class="form-group">
+                        <label for="startTag">开始标签:</label>
+                        <input type="text" id="startTag" value="<|text|>" placeholder="开始标签">
+                    </div>
+                    <div class="form-group">
+                        <label for="endTag">结束标签:</label>
+                        <input type="text" id="endTag" value="<|/text|>" placeholder="结束标签">
+                    </div>
+                    <div class="form-group">
+                        <label for="optimizationPrompt">优化提示词:</label>
+                        <textarea id="optimizationPrompt" rows="4" placeholder="请优化以下文本，使其更加流畅易读，保持原意不变：">请优化以下文本，使其更加流畅易读，保持原意不变：</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="temperature">温度:</label>
+                        <input type="number" id="temperature" step="0.1" min="0" max="2" value="0.7">
+                    </div>
+                    <div class="form-group">
+                        <label for="maxTokens">最大令牌数:</label>
+                        <input type="number" id="maxTokens" value="2000">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>文本优化API设置</h2>
+                    <div class="form-group">
+                        <label for="useSeparateOptimizationApi">
+                            <input type="checkbox" id="useSeparateOptimizationApi"> 使用单独的API进行文本优化
+                        </label>
+                    </div>
+                    <div id="optimizationApiSettings" style="display: none;">
+                        <div class="form-group">
+                            <label for="optimizationBaseUrl">API 地址:</label>
+                            <input type="text" id="optimizationBaseUrl" placeholder="https://api.openai.com/v1">
+                        </div>
+                        <div class="form-group">
+                            <label for="optimizationApiKey">API 密钥:</label>
+                            <input type="password" id="optimizationApiKey" placeholder="输入您的API密钥">
+                        </div>
+                        <div class="form-group">
+                            <label for="optimizationModel">模型:</label>
+                            <select id="optimizationModel">
+                                <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                                <option value="gpt-4">GPT-4</option>
+                            </select>
+                            <button id="refreshOptimizationModels" class="btn-secondary">刷新模型列表</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="optimizationTimeout">超时时间 (ms):</label>
+                            <input type="number" id="optimizationTimeout" value="30000">
+                        </div>
+                        <div class="form-actions">
+                            <button id="testOptimizationConnection" class="btn-secondary">测试优化API连接</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 模型别名标签页 -->
+            <div id="model-aliases" class="tab-content">
+                <div class="card">
+                    <h2>模型别名管理</h2>
+                    <p>在这里您可以创建自定义模型名称，将它们映射到实际的LLM模型。</p>
+                    
+                    <div class="form-group">
+                        <label for="customModelName">自定义模型名称:</label>
+                        <input type="text" id="customModelName" placeholder="输入自定义模型名称">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="actualModelSelect">实际模型:</label>
+                        <select id="actualModelSelect">
+                            <option value="">选择实际模型</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button id="addModelAlias" class="btn-primary">添加别名</button>
+                        <button id="refreshModelsForAliases" class="btn-secondary">刷新模型列表</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>现有模型别名</h2>
+                    <div id="modelAliasesList" class="model-aliases-list">
+                        <!-- 模型别名列表将在这里动态生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 文本优化标签页 -->
+            <div id="optimizer" class="tab-content">
+                <div class="card">
+                    <h2>文本优化预览</h2>
+                    <p><strong>注意：</strong>此功能用于预览LLM生成的回复文本的优化效果。在实际使用中，标签应应用于LLM生成的回复文本中需要优化的部分，而不是用户输入的文本。</p>
+                    <div class="form-group">
+                        <label for="inputText">模拟LLM回复文本:</label>
+                        <textarea id="inputText" rows="8" placeholder="输入模拟的LLM回复文本，使用标签包裹需要优化的部分。例如：你好，<content>我是AI助手</content>，很高兴认识您。"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button id="optimizeText" class="btn-primary">优化文本</button>
+                        <button id="clearText" class="btn-secondary">清空</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>优化结果对比</h2>
+                    <div class="comparison-container">
+                        <div class="comparison-panel">
+                            <h3>原始回复</h3>
+                            <div id="originalText" class="text-display"></div>
+                        </div>
+                        <div class="comparison-panel">
+                            <h3>优化后回复</h3>
+                            <div id="optimizedText" class="text-display"></div>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <h3>使用说明</h3>
+                        <ul>
+                            <li>标签应用于LLM生成的回复文本中需要优化的部分</li>
+                            <li>标签不会应用于用户输入的文本</li>
+                            <li>在SillyTavern中，LLM生成的回复文本中的标签内容将被自动优化</li>
+                            <li>此预览功能仅用于测试优化效果，实际优化发生在代理服务处理LLM回复时</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 日志查看标签页 -->
+            <div id="logs" class="tab-content">
+                <div class="card">
+                    <h2>系统日志</h2>
+                    <div class="log-controls">
+                        <button id="refreshLogs" class="btn-secondary">刷新日志</button>
+                        <button id="clearLogs" class="btn-secondary">清空日志</button>
+                        <select id="logLevel">
+                            <option value="all">所有级别</option>
+                            <option value="error">错误</option>
+                            <option value="warn">警告</option>
+                            <option value="info">信息</option>
+                            <option value="debug">调试</option>
+                        </select>
+                    </div>
+                    <div id="logContainer" class="log-container"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 SillyTavern Text Optimizer</p>
+        </footer>
+    </div>
+
+    <!-- 通知容器 -->
+    <div id="notification" class="notification"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
